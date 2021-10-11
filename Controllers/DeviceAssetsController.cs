@@ -15,7 +15,7 @@ using System.Web.Http;
 namespace AssessmentWebAPI.Controllers
 {
     public class DeviceAssetsController : ApiController
-    {              
+    {
 
         public static DeviceRequest GetAssetResponse(DeviceRequest devices)
         {
@@ -41,13 +41,13 @@ namespace AssessmentWebAPI.Controllers
             Console.WriteLine(response.Content);
 
             //HttpResponseMessage response = await client.PostAsync("http://tech-assessment.vnext.com.au/api/devices/assetId/", content);
-            //if (response.IsSuccessStatusCode)
-            //{
-            //    var result = await response.Content.ReadAsStringAsync();
-            AssetResponse deviceResponse = JsonConvert.DeserializeObject<AssetResponse>(response.Content);
+            if (response.IsSuccessful)
+            {
+                //    var result = await response.Content.ReadAsStringAsync();
+                AssetResponse deviceResponse = JsonConvert.DeserializeObject<AssetResponse>(response.Content);
 
-            devices = AssignDeviceAssetIds(devices, deviceResponse);
-            //}
+                devices = AssignDeviceAssetIds(devices, deviceResponse);
+            }
 
             return devices;
         }
@@ -59,7 +59,7 @@ namespace AssessmentWebAPI.Controllers
 
             foreach (var x in deviceResponse.Devices)
             {
-                var device = devices?.Devices.FirstOrDefault(d => d.DeviceId == x.DeviceId);
+                var device = devices?.Devices.FirstOrDefault(d => d.DeviceId == x.DeviceId && d.AssetId == null);
                 if (device != null)
                     device.AssetId = x.AssetId;
             }
@@ -67,6 +67,6 @@ namespace AssessmentWebAPI.Controllers
             return devices;
         }
 
-        
+
     }
 }
