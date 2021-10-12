@@ -32,7 +32,7 @@ steps:
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(System.DefaultWorkingDirectory)'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
 
@@ -42,7 +42,7 @@ steps:
     azureSubscription: 'Ronak Vachhani – MPN(717cfc03-6db2-47a5-ab9e-57a7dcd5fd02)'
     appType: 'webApp'
     WebAppName: 'vnext-assessment'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
     enableCustomDeployment: true
     DeploymentType: 'webDeploy'
     TakeAppOfflineFlag: false
