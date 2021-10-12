@@ -30,6 +30,8 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- task: PublishBuildArtifacts@1
+
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'AzureRM'
@@ -37,8 +39,5 @@ steps:
     appType: 'webApp'
     WebAppName: 'vnext-assessment'
     packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
-# Build and test ASP.NET projects.
-# Add steps that publish symbols, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
-
-- task: PublishBuildArtifacts@1
+    enableCustomDeployment: true
+    DeploymentType: 'webDeploy'
