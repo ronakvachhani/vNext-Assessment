@@ -1,7 +1,4 @@
 # ASP.NET
-# Build and test ASP.NET projects.
-# Add steps that publish symbols, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
 trigger:
 - master
@@ -32,3 +29,14 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Ronak Vachhani – MPN(717cfc03-6db2-47a5-ab9e-57a7dcd5fd02)'
+    appType: 'webApp'
+    WebAppName: 'vnext-assessment'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
