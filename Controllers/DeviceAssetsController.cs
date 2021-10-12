@@ -19,17 +19,12 @@ namespace AssessmentWebAPI.Controllers
 
         public static DeviceRequest GetAssetResponse(DeviceRequest devices)
         {
-            AssetRequest assetRequests = DeviceController.GetDeviceIds(devices); //Extract DeviceIds from the device list.
-
-            //var client = new HttpClient();
-            ////client.BaseAddress = new Uri("http://tech-assessment.vnext.com.au/api/devices/");
-            //client.DefaultRequestHeaders.Accept.Clear();
-            //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            //client.DefaultRequestHeaders.Add("x-functions-key", "DRefJc8eEDyJzS19qYAKopSyWW8ijoJe8zcFhH5J1lhFtChC56ZOKQ==");
-
+            AssetRequest assetRequests = DeviceController.GetDeviceIds(devices); 
+            
+            //Serialize DeviceId list for Inventory API
             var json = JsonConvert.SerializeObject(assetRequests);
-            //var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
 
+            //Create RestClient
             var client = new RestClient("http://tech-assessment.vnext.com.au/api/devices/assetId/");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
@@ -40,10 +35,8 @@ namespace AssessmentWebAPI.Controllers
             IRestResponse response = client.Execute(request);
             Console.WriteLine(response.Content);
 
-            //HttpResponseMessage response = await client.PostAsync("http://tech-assessment.vnext.com.au/api/devices/assetId/", content);
             if (response.IsSuccessful)
             {
-                //    var result = await response.Content.ReadAsStringAsync();
                 AssetResponse deviceResponse = JsonConvert.DeserializeObject<AssetResponse>(response.Content);
 
                 devices = AssignDeviceAssetIds(devices, deviceResponse);
@@ -52,6 +45,12 @@ namespace AssessmentWebAPI.Controllers
             return devices;
         }
 
+        /// <summary>
+        /// Updates the input list to populate the AssetId field using the response from the Inventory API.
+        /// </summary>
+        /// <param name="devices"></param>
+        /// <param name="deviceResponse"></param>
+        /// <returns></returns>
         public static DeviceRequest AssignDeviceAssetIds(DeviceRequest devices, AssetResponse deviceResponse)
         {
             if (deviceResponse == null || !deviceResponse.Devices.Any())
@@ -59,6 +58,7 @@ namespace AssessmentWebAPI.Controllers
 
             foreach (var x in deviceResponse.Devices)
             {
+                //Null condition to handle duplicates i.e. unique AssetIds for the same DeviceId
                 var device = devices?.Devices.FirstOrDefault(d => d.DeviceId == x.DeviceId && d.AssetId == null);
                 if (device != null)
                     device.AssetId = x.AssetId;

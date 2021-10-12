@@ -14,8 +14,9 @@ namespace AssessmentWebAPI.Data
     {
         public static void InsertDevice(DeviceRequest request)
         {
-            DataTable dt = new DataTable();
-            dt.Columns.AddRange(new DataColumn[5] { new DataColumn("DeviceId", typeof(string)),
+            //Create the table
+            DataTable table = new DataTable();
+            table.Columns.AddRange(new DataColumn[5] { new DataColumn("DeviceId", typeof(string)),
                         new DataColumn("Name", typeof(string)),
                         new DataColumn("Location",typeof(string)) ,
                         new DataColumn("Type", typeof(string)) ,
@@ -23,17 +24,18 @@ namespace AssessmentWebAPI.Data
 
             foreach (var device in request.Devices)
             {
-                dt.Rows.Add(device.DeviceId, device.Name, device.Location, device.Type, device.AssetId);
+                //Populate the table
+                table.Rows.Add(device.DeviceId, device.Name, device.Location, device.Type, device.AssetId);
             }
 
-            if (dt.Rows.Count > 0)
+            if (table.Rows.Count > 0)
             {
                 string connectionStr = ConfigurationManager.ConnectionStrings["Test"].ConnectionString;
                 using (SqlConnection con = new SqlConnection(connectionStr))
                 {
                     using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
                     {
-                        //Set the database table name
+                        //Set the table/column mappings
                         sqlBulkCopy.DestinationTableName = "dbo.Device";
 
                         sqlBulkCopy.ColumnMappings.Add("DeviceId", "DeviceId");
@@ -42,7 +44,7 @@ namespace AssessmentWebAPI.Data
                         sqlBulkCopy.ColumnMappings.Add("Type", "Type");
                         sqlBulkCopy.ColumnMappings.Add("AssetId", "AssetId");
                         con.Open();
-                        sqlBulkCopy.WriteToServer(dt);
+                        sqlBulkCopy.WriteToServer(table);
                         con.Close();
                     }
                 }

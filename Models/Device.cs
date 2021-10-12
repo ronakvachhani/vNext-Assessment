@@ -7,7 +7,6 @@ using System.Web;
 namespace AssessmentWebAPI.Models
 {
     [DataContract]
-    //[Newtonsoft.Json.JsonObject(Title = "deviceIds")]
     public class Device
     {
         [DataMember]

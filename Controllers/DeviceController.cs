@@ -15,7 +15,7 @@ namespace AssessmentWebAPI.Controllers
     public class DeviceController : ApiController
     {
         /// <summary>
-        /// 
+        /// Extracts DeviceIds from the JSON input to be passed onto the Inventory API. 
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -29,35 +29,11 @@ namespace AssessmentWebAPI.Controllers
             }
             return obj;
         }
-
-        //public static List<Device> GetDevices()
-        //{
-        //    return new List<Device>()
-        //    {
-        //        new Device()
-        //        {
-        //            DeviceId = "DVID00000123",
-        //            Name = "First Device",
-        //            Location = "Melbourne",
-        //            Type = "Temperature Sensor"
-        //        },
-        //        new Device()
-        //        {
-        //            DeviceId = "DVID00000124",
-        //            Name = "Second Device",
-        //            Location = "Sydney",
-        //            Type = "Pressure Sensor"
-        //        },
-        //        new Device()
-        //        {
-        //            DeviceId = "DVID00000125",
-        //            Name = "Third Device",
-        //            Location = "Brisbane",
-        //            Type = "Humidity Sensor"
-        //        }
-        //    };
-        //}
-
+        /// <summary>
+        /// Inserts/Registers records/devices in the database. 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost]
         public bool RegisterDevices(DeviceRequest request)
         {
